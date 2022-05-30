@@ -1,0 +1,37 @@
+=>UPPER() and LOWER() (Change A String's Case)
+
+Upper Syntax
+
+SELECT UPPER('Hello World');
+
+LOWER Synatx
+
+SELECT LOWER('Hello World');
+
+________________________________________________
+
+SELECT UPPER('hello world');
+
+SELECT LOWER('DATA LAND TECHNOLOGY');
+________________________________________________
+
+SELECT * FROM persons;
+
+SELECT UPPER(firstname) FROM persons;
+
+SELECT UPPER(city) FROM persons;
+
+
+SELECT LOWER(firstname) FROM persons;
+
+SELECT LOWER(city) FROM persons;
+
+=>UPPER() and LOWER() with CONCAT()
+
+thin htut live in MANDALAY
+SELECT CONCAT(firstname,' live in ',UPPER(city)) FROM persons;
+
+
+thin htut live in mandalay
+SELECT CONCAT(firstname,' live in ',LOWER(city)) FROM persons;
+

@@ -1,0 +1,119 @@
+=>PRIMARY KEY Constraint (PK)	(uniqueဖြစ်အောင်လုပ်ဖို့)
+
+PK unique indentifier
+PK constraint uniquely each record in table.
+PK value must unique, cannot contain NULL values.
+PK single or multiple columns (fields).
+
+PRIMARY KEY = Syntax
+Method 1
+CREATE TABLE persons(
+	id INT NOT NULL,
+	firstname VARCHAR(255) NOT NULL;
+	lastname VARCHAR(255),
+	age int,
+	PRIMARY KEY (id)
+);
+
+Method 2
+
+CREATE TABLE persons(
+	 id INT NOT NULl PRIMARY KEY,
+	 firstname VARCHAR(255) NOT NULL,
+	 lastname VARCAR(255),
+	 age INT
+);
+
+
+___________________________________
+
+CREATE TABLE computers(
+	brand VARCHAR(255),
+	made VARCHAR(255)
+);
+
+
+INSERT INTO computer(brand,made)
+VALUE ('asus','china');
+
+INSERT INTO computer(brand,made)
+VALUE ('asus','china');
+
+INSERT INTO computer(brand,made)
+VALUE ('asus','china');
+
+DROP TABLE computers;
+
+=>Create Table with PK by brand
+CREATE TABLE computers(
+	brand VARCHAR(255) NOT NULL,
+	made VARCHAR(255),
+	PRIMARY KEY (brand)
+);
+
+DESC computers;
+
+INSERT INTO computers (brand,made)
+VALUE ('asus','chin');
+
+INSERT INTO computers (brand,made)
+VALUE ('hp','thai');
+
+*error
+INSERT INTO computers (brand,made)
+VALUE ('asus','india');
+
+
+CREATE TABLE computers(
+	id INT NOT NULL PRIMARY KEY,
+	brand VARCHAR(255),
+	made VARCHAR(255)
+);
+
+*error
+INSERT INRO computer(brand,made)
+VALUE ('asus','china')
+
+
+___________________________________
+
+=>CREATE Table with PK by id using auto INCREMENT
+
+CREATE TABLE computers(
+	id INT NOT NULL AUTO_INCREMENT,
+	brand VARCHAR(255),
+	made VARCHAR(255),
+	PRIMARY KEY (id)
+);
+
+INSERT INTO computers(brand,made)
+VALUE ('asus','china')
+
+INSERT INTO computers(brand,made)
+VALUE ('asus','china')
+
+
+*error
+INSERT INTO computers(id,brand,made)
+VALUE (3,'asus','china')
+
+INSERT INTO computers(id,brand,made)
+VALUE (6,'hp','chinaw')
+
+SELECT * FROM computers;
+
+INSERT INTO computers(brand,made)
+VALUE ('dell','indo');
+
+SELECT * FROM computers;
+
+
+AUTO INCREMENT က MySQL မှာ 1နဲ့စတယ် 
+
+CREAT TABLE computers(
+	id INT NOT NULL AUTO_INCREMENT,
+	brand VARCHAR(255),
+	made VARCHAR(255),
+	PRIMARY KEY (brand)
+);
+

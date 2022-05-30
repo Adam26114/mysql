@@ -1,0 +1,34 @@
+=>CHECK DATABASES;
+Show DATABASES;
+
+=>CREATE DATABASE
+CREATE DATABASE wdf5308;
+
+(database ကိုတည်ဆောက်ရင်စာလုံးအသေးတွေဘဲတည်ဆောက်မယ်။ အနည်းကိန်း ဘဲဖြစ်ရမယ်။No Number,No Special escape charactor)
+
+=>DELETE DATABASE
+DROP DATABASE wdf5308;
+
+=>CHOSE DATABASE
+USE wdf5308;
+
+=>CHECK CURRENT DATABASE
+SELECT database();
+
+
+(Data Base Sarverတစ်လုံးကို database တွေအများကြီးတည်ဆောက်လို့ရတယ်
+database တစ်ခုမှာတော့ project 1ရမယ် )
+
+____________________________________
+
+
+=>Database Name
+CAN CREATE
+CREATE DATABASE myapp
+CREATE DATABASE myapp123;
+CREATE DATABASE book-store;
+
+CAN'T CREATE
+CREATE DATABASE My App;(spaceခြားပီးcreateလို့မရဝူး)
+CREATE DATEBASE 123456;(Numberဖြစ်လီု့မရဝူး)
+CREATE DATABASE @#$%^;(Special escape charactor ဖြစ်လို့မရဝူး)

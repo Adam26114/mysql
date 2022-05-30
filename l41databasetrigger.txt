@@ -1,0 +1,499 @@
+=>Database Trigger
+
+=Syntax
+
+CREATE TRIGGER triggername
+trigger_time trigger_event on tablename FOR EACH ROW
+BEGIN
+    -- statements
+END
+
+=>trigger_time က နှစ်ခုရှိတယ်
+1.BEFORE
+2.AFTER
+
+=>trigger_event က သုံးခုရှိတယ်
+1.INSERT
+2.UPDATE
+3.DELETE
+____________________________________________________
+
+CREATE TABLE IF NOT EXISTS borrowers(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50),
+    password VARCHAR(255),
+    age INT,
+    status INT DEFAULT 1
+);
+
+DESC borrowers;
+
+1. 18 45
+2. >  18
+3. > 45
+
+INSERT INTO borrowers(username,password,age)
+VALUES('aungaung',MD5(SHA1('12345')),18),
+('zawzaw',MD5(SHA1('12345')),30);
+
+SELECT * FROM borrowers;
+
+_____________
+
+=> IF Statements
+
+------IF-------
+IF conditiona1 THEN
+    ... statements to execute
+END IF;
+
+------IF ELSE------
+
+IF conditiona1 THEN
+    ... statements to execute
+ELSE condition2 THEN
+    ... statements to execute
+END IF;
+
+------IF ELSEIF ELSE------
+
+IF conditiona1 THEN
+    ... statements to execute
+ELSEIF condition2 THEN
+    ... statements to execute
+ELSEIF condition3 THEN
+    ... statements to execute
+ELSE condition4 THEN
+    ... statements to execute
+END IF;
+____________________________
+
+=>BEFORE INSERT
+
+-----------------METHOD 1 (//)-----------------
+
+NOTE : DELIMITER // DELIMITER $$ DELIMITER |
+[*DELIMITER //,DELIMITER ;,DELIMITER $$ DECIMAL နဲ့(// ; &&) ကကပ်ရေးလို့မရဝူး*]
+
+DELIMITER //
+
+CREATE TRIGGER borrowerstatus_bfc
+BEFORE INSERT
+ON borrowers FOR EACH ROW
+BEGIN
+    IF NEW.age < 18 THEN SET NEW.status = 2;
+    END IF;
+END; //
+
+DELIMITER ;
+
+-----------------METHOD 2 (&&)-----------------
+
+DELIMITER &&
+
+CREATE TRIGGER borrowerstatus_bfc
+BEFORE INSERT
+ON borrowers FOR EACH ROW
+BEGIN
+    IF NEW.age < 18 THEN SET NEW.status = 2;
+    END IF;
+END; &&
+
+DELIMITER ;
+
+-----------------METHOD 3 (|)-----------------
+
+DELIMITER |
+
+CREATE TRIGGER borrowerstatus_bfc
+BEFORE INSERT
+ON borrowers FOR EACH ROW
+BEGIN
+    IF NEW.age < 18 THEN SET NEW.status = 2;
+    END IF;
+END; |
+
+DELIMITER ;
+
+-----------------------------------------------
+
+SHOW TRIGGERS;
+SHOW TRIGGERS LIKE 'borrowers%';
+SHOW TRIGGERS LIKE 'borrowers%'\G;
+
+
+INSERT INTO borrowers(username,password,age)
+VALUES('hninhnin',MD5(SHA1(12345)),16);
+
+SELECT * FROM borrowers;
+
+INSERT INTO borrowers(username,password,age)
+VALUES('thida',MD5(SHA1(12345)),35);
+
+SELECT * FROM borrowers;
+
+DROP TRIGGER IF EXISTS borrowerstatus_bfc;
+
+INSERT INTO borrowers(username,password,age)
+VALUES('june',MD5(SHA1(12345)),14);
+SELECT * FROM borrowers;
+
+____________________________________________________
+
+DELIMITER |
+
+CREATE TRIGGER borrowerstatus_bfc
+BEFORE INSERT
+ON borrowers FOR EACH ROW
+BEGIN
+    IF NEW.age < 18 THEN SET NEW.status = 2;
+    ELSEIF NEW.age > 45 THEN SET NEW.status = 3;
+    END IF;
+END ; |
+
+DELIMITER ; 
+
+SELECT * FROM borrowers;
+
+INSERT INTO borrowers(username,password,age)
+VALUES('yamin',MD5(SHA1(12345)),50);
+
+SELECT * FROM borrowers;
+
+INSERT INTO borrowers(username,password,age)
+VALUES('tuntun',MD5(SHA1(12345)),28);
+
+SELECT * FROM borrowers;
+
+DROP TRIGGER IF EXISTS borrowerstatus_bfc;
+
+INSERT INTO borrowers(username,password,age)
+VALUES('april',MD5(SHA1(12345)),12);
+
+DROP TRIGGER IF EXISTS borrowerstatus_bfc;
+
+____________________________________________________
+
+=> MySQL ERRORS
+
+A numeric error code(1146)
+SQLSTATE vale('42S02') . string / 5 character
+Message String - description of the error
+
+_____________
+
+DELIMITER $$
+
+CREATE TRIGGER borrowerrestrict_bfc
+BEFORE INSERT ON borrowers FOR EACH ROW
+BEGIN
+    IF NEW.age < 18 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Ohh... we cannot provide loan for this user';
+    END IF;
+END; $$
+
+DELIMITER ;
+
+SELECT * FROM borrowers;
+
+INSERT INTO borrowers(username,password,age)
+VALUES('susu',MD5(SHA1(12345)),35);
+
+SELECT * FROM borrowers;
+
+*error with message 45000
+INSERT INTO borrowers(username,password,age)
+VALUES('yuyu',MD5(SHA1(12345)),16);
+
+SELECT * FROM borrowers;
+
+INSERT INTO borrowers(username,password,age)
+VALUES('kyawkyaw',MD5(SHA1(12345)),55);
+
+DROP TRIGGER IF EXISTS borrowerrestrict_bfc;
+_____________________________________
+=> AFTER INSERT
+
+CREATE TABLE IF NOT EXISTS borrowercreators(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    borrower_id INT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    created_by VARCHAR(50)
+);
+
+DESC borrowercreators;
+
+
+DELIMITER //
+
+CREATE TRIGGER borrowercreator_afc
+AFTER INSERT
+ON borrowers FOR EACH ROW
+BEGIN
+    DECLARE dbuser VARCHAR(50);
+    SELECT USER() INTO dbuser;
+
+    INSERT INTO borrowercreators(borrower_id,created_by)
+    VALUES(NEW.id,dbuser);
+END;//
+
+DELIMITER ;
+
+INSERT INTO borrowers(username,password,age)
+VALUES('hlahla',MD5(SHA1(12345)),23);
+
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+
+INSERT INTO borrowers(username,password,age)
+VALUES('myamya',MD5(SHA1(12345)),50);
+
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+
+_____________________________________
+
+CREATE TABLE IF NOT EXISTS reminders(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    borrower_id INT,
+    message VARCHAR(255) NOT NULL
+);
+
+DESC reminders;
+
+DELIMITER //
+
+CREATE TRIGGER borroweragereminder_afc
+AFTER INSERT
+ON borrowers FOR EACH ROW
+BEGIN
+    IF NEW.age IS NULL THEN
+        INSERT INTO reminders(borrower_id,message)
+        VALUES(NEW.id,CONCAT('Dear ',NEW.username, ',please update your age.'));
+    END IF;
+END; //
+
+DELIMITER ;
+
+
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM reminders;
+
+INSERT INTO borrowers(username,password)
+VALUES('thura',MD5(SHA1(12345)));
+
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM reminders;
+
+INSERT INTO borrowers(username,password,age)
+VALUES('myomyo',MD5(SHA1(12345)),14);
+
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM reminders;
+
+INSERT INTO borrowers(username,password)
+VALUES('naungnaung',MD5(SHA1(12345)));
+
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM reminders;
+
+____________________________________________________
+
+=>BEFORE UPDATE
+
+DELIMITER |
+
+CREATE TRIGGER borrowerage_bfu
+BEFORE UPDATE
+ON borrowers FOR EACH ROW
+BEGIN
+
+    DECLARE errmessage VARCHAR(255);
+    SET errmessage = CONCAT('The old age is ',OLD.age,'. Sorry ,we cannot provite to change');
+
+    IF OLD.age IS NOT NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errmessage;
+    ELSE
+        IF NEW.age < 18 THEN SET NEW.status = 2;
+        ELSEIF NEW.age > 45 THEN SET NEW.status = 3;
+        END IF;
+    END IF;
+END; |
+
+DELIMITER ;
+
+
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM reminders;
+
+* error with message 45000
+UPDATE borrowers SET age = 40 WHERE id = 1; 
+
+UPDATE borrowers SET age = 30 WHERE id = 14; 
+UPDATE borrowers SET age = 15 WHERE id = 16; 
+
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM reminders;
+
+INSERT INTO borrowers(username,password)
+VALUES('thiri',MD5(SHA1(12345))),
+('kyal sin',MD5(SHA1(12345))),
+('ko tha',MD5(SHA1(12345)));
+____________________________
+
+=>AFTER UPDATE
+
+DELIMITER $$
+
+CREATE TRIGGER borrowerreminder_afu
+AFTER UPDATE
+ON borrowers FOR EACH ROW
+BEGIN
+    DELETE FROM reminders WHERE borrower_id = NEW.id;
+END; $$
+
+DELIMITER ;
+
+*error with message 45000
+UPDATE borrowers SET age = 40 WHERE id = 2;
+
+UPDATE borrowers SET age = 30 WHERE id = 17;
+UPDATE borrowers SET age = 15 WHERE id = 18;
+UPDATE borrowers SET age = 50 WHERE id = 19;
+
+
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM reminders;
+
+_____________________________________
+
+=>BEFORE DELETE
+
+CREATE TABLE IF NOT EXISTS activities(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    borrower_id INT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    created_by VARCHAR(50)
+);
+
+DESC activities;
+
+DELIMITER $$
+
+CREATE TRIGGER borroweracti_bfd
+BEFORE DELETE
+ON borrowers FOR EACH ROW
+BEGIN
+    DECLARE dbuser VARCHAR(50);
+    SELECT USER() INTO dbuser;
+
+    INSERT INTO activities(borrower_id,created_by)
+    VALUES(OLD.id,dbuser);
+END; $$
+
+DELIMITER ;
+
+
+
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM activities;
+
+DELETE FROM borrowers WHERE id = 19;
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM activities;
+
+DELETE FROM borrowers WHERE id = 17;
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM activities;
+
+_____________________________________
+=>AFTER DELETE
+
+
+DELIMITER //
+
+CREATE TRIGGER borroweracti_afd
+AFTER DELETE
+ON borrowers FOR EACH ROW
+
+BEGIN
+    DELETE FROM borrowercreators WHERE borrower_id = OLD.id;
+END; //
+
+DELIMITER ;
+
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM activities;
+
+DELETE FROM borrowers WHERE id = 18;
+DELETE FROM borrowers WHERE id = 14;
+DELETE FROM borrowers WHERE id = 15;
+DELETE FROM borrowers WHERE id = 16;
+SELECT * FROM borrowers;
+SELECT * FROM borrowercreators;
+SELECT * FROM activities;
+
+
+
+_____________________________________
+*NOTE*
+======
+Trigger က auto CREATE,auto UPDATE,auto DELETEလုပ်ပေးနိုင်တယ်။
+Botတစ်ကောင်နဲ့တူတယ်။
+
+
+Product Table
+1 JAN 2021
+1.Redbull  1  500
+2.Sponsor  1  400
+Sales Tables
+id  invdate  product_id  qty price   casheir_id  member_id
+1   10 jan 2021   1      1   500     1001        NULL
+1   20 jun 2021   1      1   500     1001        NULL
+1   31 Dec 2021   1      1   500     1001        NULL
+1   10 Oct 2021   1      1   1000    1001        NULL
+1   20 Nov 2021   1      1   5000    1001        NULL
+
+
+Productpricehistories Table
+id
+product_id
+oldprice
+newprice 
+updated_by
+
+--------------------
+
+users Table
+name
+email
+password
+age
+stauts
+
+name       email                 password    age     stauts
+aungaung   aungaung@gmail.com    12345       20      1
+zawzaw     zawzaw@gmail.com      12345       18      2
+maungmaung maungmaung@gmail.com  12345       14      2
+susu       susu@gmail.com        12345       35      1
+
+=>back end js
+id(age < 18){
+    db stauts = 0
+}else{
+    db stauts = 1
+};
+
+6MTG

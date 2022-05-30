@@ -1,0 +1,299 @@
+=>Comments
+
+(i) Single Line Comments
+#comment here(Space or Without space is ok)
+-- comment here (Space needed)
+/*comment*/ (Space or Without space is ok )
+
+
+(ii) Multi Line Comments
+
+/* 
+    multi comment one 
+    multi comment two 
+    .................
+*/
+
+SELECT (1+1); #comment here 
+SELECT (1+1); # comment here 
+SELECT (1+1); -- comment here 
+SELECT (1+1);/* comment here */
+SELECT (1+1);/*comment here*/
+
+
+______________________________________________________________
+
+=>Create User 
+=Syntax 
+
+CREATE USER username IDENTIFIED BY 'password';
+
+CREATE USER 'adam26114'@'localhost' IDENTIFIED BY '26114';
+
+
+\q
+mysql -uwdf6261wpt -p'123456789';
+SELECT USER();
+SHOW DATABASES;-- result = only 1 sample database
+SELECT USER FROM mysql.user;-- result = denied
+
+
+=>Existing USERS
+SELECT USER FROM mysql.user;
+SELECT USER FROM mysql.user WHERE USER LIKE 'k%';
+
+\q
+mysql -uWDF6261 -p'datalandtechnology';
+
+
+NOTE : ALL PRIVILEGES (it give privileges to new user )
+        CREATE (create database and create tables)
+        DROP (drop database and drop tables)
+
+        INSERT (specific table )
+        SELECT (specific table )
+        UPDATE (specific table )
+        DELETE (specific table )
+
+=Syntax :   (database.tablename)
+GRANT ALL PRIVILEGES ON *.* TO 'username'@'localhost';
+FLUSH PRIVILEGES; --reload loe yin
+
+GRANT CREATE,SELECT,INSERT ON *.* TO 'username'@'localhost';
+FLUSH PRIVILEGES;
+
+*error = Access Denied (cuz WDF6261@localhost was subaccount)
+GRANT ALL PRIVILEGES ON *.* TO 'wdf6261wpt'@'localhost';
+
+SHOW GRANTS FOR 'WDF6261'@'localhost';
+SHOW GRANTS FOR 'wdf6261wpt'@'localhost';
+
+\q
+mysql -u root -p'sqlpassword20201A';
+GRANT ALL PRIVILEGES ON *.* TO 'wdf6261wpt'@'localhost';
+FLUSH PRIVILEGES; 
+
+SHOW GRANTS FOR 'wdf6261wpt'@'localhost';
+
+\q
+mysql -uwdf6261wpt -p'123456789';
+SELECT USER();
+SHOW DATABASES;-- result = only 1 sample database
+SELECT USER FROM mysql.user;-- result = denied
+
+--------------------
+Exercise (For Optinal)
+
+mysql -u root -p'sqlpassword20201A';
+
+CREATE USER 'wdf6261wpt'@'localhost' IDENTIFIED BY  '123456789';
+
+SELECT USER FROM mysql.user WHERE USER LIKE 'wdf6261%';
+
+SHOW GRANTS FOR 'wdf6261wpt';
+
+GRANT CREATE,SELECT,INSERT ON *.* TO 'wdf6261wpt'@'localhost';
+FLUSH PRIVILEGES; 
+
+SHOW GRANTS FOR 'wdf6261wpt';
+
+\q
+mysql -uwdf6261wpt -p'123456789';
+SELECT USER();
+SHOW DATABASES;-- result = only 1 sample database
+SELECT USER FROM mysql.user;-- result = denied
+__________________________________________________________
+=>Drop USER 
+
+Method 1
+=Syntax : (Single )
+DROP USER 'username'@'localhost';
+
+=Syntax : (Multi)
+DROP USER 'username1'@'localhost','username2'@'localhost';
+
+
+Method 2
+DELETE FROM mysql.user USER = 'wdf6261wpt';
+
+SELECT USER FROM mysql.username WHERE USER LIKE wdf6261%;
+DROP USER 'wdf6261wpt'@'localhost';
+SELECT USER FROM mysql.username WHERE USER LIKE WDF6261%;
+
+______________________________________________
+
+=>Rename USER
+
+=Syntax : (Single)
+Rename User oldname TO newname;
+
+=Syntax : (Multi)
+Rename User oldname1 TO newname1,oldname2 TO name2; 
+
+
+\q 
+mysql -u root -p'sqlpassword20201A';
+
+SELECT USER FROM mysql.username WHERE USER LIKE wdf6261%;
+
+RENAME USER 'wdf6261wpt'@'localhost' TO 'wdf6261WPT'@'localhost';
+
+SELECT USER FROM mysql.username WHERE USER LIKE wdf6261%;
+
+\q 
+*error
+mysql -uwdf6261wpt -p'123456789';
+
+mysql -uwdf6261WPT -p'123456789';
+SELECT USER();
+
+
+_____________________________________________________
+
+=>Change USER password
+
+=Syntax : 
+ALTER USER 'username'@'localhost' IDENTIFIED BY 'newspassword';
+
+=By Root User | Sub Account
+\q
+mysql -u WDF6261 -p'datalandtechnology';
+
+ALTER USER 'wdf6261WPT'@'localhost' IDENTIFIED BY '11111';
+
+*error
+\q 
+mysql -u wdf6261 -p'123456789';
+
+mysql -u wdf6261WPT -p'11111';
+
+-----------
+By Self
+
+SELECT USER();
+ALTER USER 'wdf6261WPT'@'localhost' IDENTIFIED BY '22222';
+
+*error
+\q
+mysql -u wdf6261 -p'11111';
+
+mysql -u wdf6261WPT -p'22222';
+___________________________________________________
+
+
+=> Account Lock
+
+=Syntax : (By New User)
+CREATE USER username IDENTIFIED BY 'password' ACCOUNT LOCK;
+
+=Syntax : (To Existing user)
+ALTER USER username IDENTIFIED BY 'password' ACCOUNT LOCK;
+
+SELECT USER FROM mysql.user WHERE USER LIKE 'wdf';
+
+=By user new
+CREATE USER 'adam26'@'localhost' IDENTIFIED BY '26114' ACCOUNT LOCK;
+
+
+SELECT USER FROM mysql.user WHERE USER LIKE 'a%';
+
+*error = Account is locked
+
+\q
+
+mysql -u adam26 -p'26114'
+(Account lock ချထားတော့ဝင်လို့မရဝုး)
+
+mysql -u WDF5308 -p'datalandtechnology'
+
+
+(ဘယ် account က lock ကျနေတယ် lock မကျနေဝူးလဲဆိုတာကြည့်နည်း)
+SELECT USER FROM mysql.user;
+SELECT USER,ACCOUNT_LOCKED FROM mysql.user;
+SELECT USER FROM mysql.user WHERE USER LIKE 'a%';
+SELECT USER,ACCOUNT_LOCKED FROM mysql.user WHERE USER LIKE 'a%';
+
+-----
+
+=To existing user
+(ရှိပီးသား account ကို lock ချနည်း)
+SELECT USER,ACCOUNT_LOCKED FROM mysql.user WHERE USER LIKE 'a%';
+
+ALTER USER 'adam26115'@'localhost' ACCOUNT LOCK;
+
+SELECT USER,ACCOUNT_LOCKED FROM mysql.user WHERE USER LIKE 'a%';
+
+*error = Account  is lock
+\q
+mysql -u adam26115 -p'26114'
+
+mysql -u WDF5308 -p'datalandtechnology'
+
+______________________________________________
+
+=>Account Unlocked
+
+=Syntax ( Single )
+ALTER USER username ACCOUNT UNLOCKED
+
+=Synta (Multi)
+ALTER USER username1,username2,...,ACCOUNT UNLOCKED;
+
+SELECT USER,ACCOUNT_LOCKED FROM mysql.user WHERE USER LIKE 'a%';
+
+ALTER USER 'adam26115'@'localhost' ACCOUNT UNLOCK;
+
+SELECT USER,ACCOUNT_LOCKED FROM mysql.user WHERE USER LIKE 'a%';
+
+ALTER USER 'adam26115'@'localhost','adam26'@'localhost' ACCOUNT UNLOCK;
+
+
+
+=>REVOKE 
+
+\q
+
+mysql -u root -p'sqlpassword20201A'
+
+SHOW GRANTS FOR 'adam26115'@'localhost';
+
+GRANT CREATE,SELECT,INSERT ON *.* TO  'adam26115'@'localhost';
+FLUSH PRIVILEGES;
+
+\q
+mysql -u adam26115 -p'26114'
+
+SHOW DATABASES;
+
+\q
+mysql -u root -p'sqlpassword20201A'
+
+REVOKE ALL PRIVILEGES ON *.* FROM 'adam26115'@'localhost';
+
+SHOW GRANTs FOR 'adam26115'@'localhost';
+___________________________________________________
+
+=GRANT VS REVOKE
+
+\q
+mysql -u adam26115 -p '26114'
+SHOW GRANTS FOR 'adam26115'@'localhost';
+
+REVOKE ALL PRIVILEGES ON *.* FROM 'adam26115'@'localhost';
+
+SHOW GRANTS FOR 'adam26115'@'localhost';
+
+SHOW DATABASES;
+
+\q
+mysql -u root -p'sqlpassword20201A'
+
+GRANT ALL PRIVILEGES ON adam26115.workers TO 'adam26115'@'localhost';
+FLUSH PRIVILEGES;
+
+SHOW GRANTS FOR 'adam26115'@'localhost';
+
+\q
+mysql -u adam26115 -p'26114'
+
+SHOW DATABASES;

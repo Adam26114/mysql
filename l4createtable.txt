@@ -1,0 +1,549 @@
+=> CREATE TABLE
+
+*SERVER LOGIN
+*DATABASE SERVER LOGIN
+*CHOOSE DATABASE ( DATABASE CHECK)
+
+=>CHECK TABLE;
+SHOW TABLES;
+
+=>CREATE TABLE = Syntax(အများကိန်းဘဲပေးမယ်,အသေးတွေဘဲပေးမယ်)
+
+CREATE TABLE table_names(
+		colum1 datatype,
+		colum2 datatype,
+		colum3 datatype,
+		...........
+);
+
+0 to 255
+
+abcd1234
+
+CREATE TABLE persons(
+	personid int,
+	firstname varchar(255),
+	lastname varchar(255),
+	city varchar(255),
+	address varchar(255)
+);
+
+SHOW TABLES;
+
+
+=>Table Info ( Describe )
+
+Method 1
+DESCRIBE persons;
+DESC persons;(table က infoတွေဖော် ပြပါ)
+
+Method 2
+ 
+SHOW COLUMNS FROM persons;
+
+*Check table from current db to another db
+SHOW COLUMNS FROM wdf2001.persons;
+SHOW COLUMNS FROM persons IN wdf2001;
+
+__________________________
+
+
+CREATE TABLE countries(
+	countryid int,
+	countryname varchar(255),
+	capitalname varchar(255),
+	currency varchar(255),
+);
+
+(Null = No value valueထည့်လဲရတယ်မထည့်လဲရတယ်)
+
+=>DELETE TABLE = Syntax
+
+Method 1 = Single DROP
+
+DROP TABLE tablename;
+
+Method 2 = Multi DROP
+
+DROP TABLE tablename1,tablename2,tablename3,...;
+
+DROP TABLE abc;
+
+DROP TABLE IF NOT EXISTS abc;
+DROP TABLE countries;
+
+*Drop table from current db to another db 
+DROP TABLE IF EXISTS wdf2001.countries;
+
+=>No Option (မဖြစ်မနေ ထည့်ရမယ်)
+(NOT NULL [NULL မဖြစ်ရဝူး])
+
+CREATE TABLE countries(
+	countryid NOT NUll
+	countryname varchar(255) NOT NULL,
+	capitalname varchar(255),
+	currency varchar(255),
+);
+
+SHOW TABLE;
+
+DESC countries;
+
+__________________________
+
+=Exercise
+
+CREATE TABLE abc(
+	name VARCHAR(10)
+);
+
+CREATE TABLE IF NOT EXISTS abc(
+	name VARCHAR(10)
+);
+
+DROP TABLE abc;
+
+DROP TABLE IF NOT EXISTS abc;
+
+CREATE TABLE IF NOT EXISTS abc(
+	name VARCHAR(10)
+);
+
+CREATE TABLE IF NOT EXISTS efg(
+	name VARCHAR(10)
+);
+
+DROP TABLE IF NOT EXISTS abc,efg;
+
+
+=>TRUNCATE
+
+CREATE TABLE IF NOT EXISTS monitors(
+	brand VARCHAR(100),
+	price DECIMAL(8,2),
+	PRIMARY KEY(id)
+);
+
+DESC monitors;
+
+SHOW TABLES;
+
+INSERT INTO monitors(brand,price)
+VALUE ('asus',400000),
+('acer',500000),
+('aoc',600000),
+('dell',700000);
+
+SELECT * FROM monitors;
+
+DROP TABLES monitors;
+-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+
+DROP နဲ့ TABLE ဖျက်ရင် Tableတစ်ခုလုံးပျက်မယ်
+Delete နဲ့ TABLE ဖျက်ရင် Dataတွေဘဲပျက်မယ်/dataပြန်သွင်းရင်တော့ သွင်းထားပီးတဲ့data ကနေပြန်စမယ်
+
+
+CREATE TABLE IF NOT EXISTS monitors(
+	id INT AUTO_INCREMENT,
+	brand VARCHAR(100),
+	price DECIMAL(8,2),
+	PRIMARY KEY(id)
+);
+
+DESC monitors;
+
+SHOW TABLES;
+
+INSERT INTO monitors(brand,price)
+VALUE ('asus',400000),
+('acer',500000),
+('aoc',600000),
+('dell',700000);
+
+SELECT * FROM monitors;
+
+DELETE FROM monitors
+
+INSERT INTO monitors(brand,price)
+VALUE ('asus',400000),
+('acer',500000),
+('aoc',600000),
+('dell',700000);
+
+SELECT * FROM monitors;
+
+TRUNCATE TABLES monitors;
+
+SELECT * FROM monitors;
+__________________________
+
+=>RENAME TABLE
+
+=Syntax
+(ALTER = ချိန်းပြစ်တာ)
+ALTER TABLE oldtablename
+RENAME TO newtablename;
+
+CREATE TABLE IF NOT EXISTS stocks(
+	item VARCHAR(100),
+	stock INT
+);
+
+DESC stocks;
+
+INSERT INTO stocks(item,stock)
+VALUES('desktop',20),
+('laptop',10),
+('projector',5),
+
+SELECT * FROM stocks;
+
+ALTER TABLE stocks
+RENAME TO itaccessories;
+
+SHOW TABLES;
+
+SELECT * FROM itaccessories;
+
+
+SELECT * FROM itaccessories;
+________________________________________________
+
+
+=> Add New Columns to table
+
+=Syntax : (Single)
+
+ALTER TABLE tablename
+ADD COLUMN columnname datatype;
+
+ALTER TABLE tablename
+ADD COLUMN columnname datatype FIRST;
+
+ALTER TABLE tablename
+ADD COLUMN columnname datatype AFTER existingcolumn;
+=>RENAME Column in table
+
+=Syntax 
+
+ALTER TABLE tablename
+CHANGE COLUMN oldcolumnname newcolumnname datatype;
+
+SELECT * FROM itaccessories
+DESC itaccessories;
+
+ALTER TABLE itaccessories
+CHANGE COLUMN stock totalqty INT;
+
+ALTER TABLE itaccessories
+CHANGE COLUMN brand manufactureby VARCHAR(100);
+
+SELECT * FROM  itaccessories;
+DESC itaccessories;
+
+________________________________________
+19.2.2022
+
+=>MODIFY Column in the table( Change column datatype )
+
+=Syntax : (Single)
+
+ALTER TABLE tablename
+MODIFY columname datatype;
+
+=Syntax : (Multi)
+
+ALTER TABLE tablename
+MODIFY columname datatype,
+MODIFY columname datatype;
+
+=Exercise ( Single)
+
+DESC itaccessories;
+
+ALTER TABLE itaccessories
+MODIFY manufactureby VARCHAR(50);
+
+DESC itaccessories;
+Note:FIRST koe AFTER existingcolumn kwe ma pr yin final ka nay add tl
+
+=Syntax : (Multi)
+
+ALTER TABLE tablename
+ADD COLUMN columnname1 datatype FIRST(or)AFTER existingcolumn,
+ADD COLUMN columnname2 datatype FIRST|AFTER existingcolumn ;
+
+=Exercise(Single)
+
+SELECT * FROM itaccessories;
+
+ALTER TABLE itaccessories 
+ADD COLUMN brand VARCHAR(50);
+
+SELECT * FROM itaccessories;
+
+
+ALTER TABLE itaccessories
+ADD COLUMN unitprice DECIMAL(10,2) NOT NULL FIRST;
+
+ALTER TABLE itaccessories
+ADD COLUMN madeby VARCHAR(50) NOT NULL AFTER item;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+-------------------------
+
+Exercise (Multi)
+
+ALTER TABLE itaccessories
+ADD COLUMN status INT DEFAULT 1 AFTER brand,
+ADD COLUMN createdby INT NOT NULL AFTER status;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+INSERT INTO itaccessories(unitprice,item,madeby,stock,brand,createdby)
+VALUES (10,'keyboard','china',30,'a4tech',1),
+(20,'mouse','taiwan',50,'logitech',2);
+
+SELECT * FROM itaccessories;
+
+________________________________________
+
+=>RENAME Column in table
+
+=Syntax
+
+ALTER TABLE tablename
+CHANGE COLUMN oldcolumnname newcolumnname datatype;
+
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+ALTER TABLE itaccessories
+CHANGE COLUMN stock totalqty INT;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+ALTER TABLE itaccessories
+CHANGE COLUMN brand manufactureby VARCHAR(100);
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+______________________________________
+
+=>MODIFY Column in the table ( Change column datatype )
+
+=Syntax : ( Single )
+
+ATLER TABLE tablename
+MODIFY columnname datatype;
+
+=Syntax (Multi)
+
+ALTER TABLE tablename
+MODIFY columname datatype,
+MODIFY columname datatype;
+
+=Exercise *(Single)
+
+DESC itaccessories;
+
+ALTER TABLE itaccessories
+MODIFY manufactureby VARCHAR(50);
+
+SELECt * FROM itaccessories;
+DESC itaccessories;
+
+*error = cuz of NULL already in data table
+ALTER TABLE itaccessories
+MODIFY manufactureby VARCHAR(30) NOT NULL;
+
+ALTER TABLE itaccessories
+MODIFY item VARCHAR(50) NOT NULL;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+------
+
+-Exercise (Multi)
+
+ALTER TABLE itaccessories
+MODIFY item VARCHAR(30) NOT NULL,
+MODIFY madeby VARCHAR(30) NOT NULL;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+-------
+=Move Columns
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+ALTER TABLE itaccessories
+MODIFY unitprice VARCHAR(50) NOT NULL
+AFTER madeby;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+
+__________________________
+
+=>Drop Columns in table
+
+=Syntax : (Single )
+
+ALTER TABLE tablename
+DROP COLUMN columname;
+
+=Syntax : (Multi)
+
+ALTER TABLE tablename
+DROP COLUMN columname1,
+DROP COLUMN columname2,
+
+=>Exercise
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+ALTER TABLE itaccessories
+DROP COLUMN status;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+
+ALTER TABLE itaccessories
+DROP COLUMN manufactureby,
+DROP COLUMN createdby;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+______________________________________
+
+=>ADD PRIMARY KEY
+
+=Method 1
+
+ALTER TABLE itaccessories
+ADD COLUMN id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+SHOW INDEX FROM itaccessories;
+
+
+
+ALTER TABLE itaccessories
+DROP COLUMN id;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+
+=Method 2
+
+ALTER TABLE itaccessories
+ADD COLUMN id INT NOT NULL AUTO_INCREMENT FIRST,
+ADD PRIMARY KEY(id);
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+SHOW INDEX FROM itaccessories;
+
+______________________________________
+
+=> Drop PRIMARY KEY 
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+
+*error
+ALTER TABLE itaccessories DROP PRIMARY KEY;
+
+
+ALTER TABLE itaccessories MODIFY id INT NOT NULL;
+ALTER TABLE itaccessories DROP PRIMARY KEY;
+(PRIMARY KEY ကိုဖျက်မယ်ဆိုရင် ဒီတိုင်းဖျက်လို့မရဝူး အရင်ဆုံး PRIMARY KEY မရှိတော့ ဝူးလို့ MODIFYလုပ်ပေးရမယ် ပီးမှ DROP လုပ်လို့ ရမယ်)
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+SHOW INDEX FROM itaccessories;
+______________________________________
+=>ADD FOREIGN KEY
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+SHOW INDEX FROM itaccessories;
+
+ALTER TABLE itaccessories
+ADD COLUMN customer_id INT NOT NULL;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+SHOW INDEX FROM itaccessories;
+
+ALTER TABLE itaccessories
+ADD FOREIGN KEY(customer_id) REFERENCES customers(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+UPDATE itaccessories SET customer_id = 2 WHERE customer_id = 0;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+SHOW INDEX FROM itaccessories;
+
+ALTER TABLE itaccessories
+ADD FOREIGN KEY(customer_id) REFERENCES customers(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+SHOW INDEX FROM itaccessories;
+
+__________________________
+
+=>DROP FOREIGN KEY
+
+SELECT * FROM itaccessories;;
+DESC itaccessories;
+SHOW INDEX FROM itaccessories;
+
+*error
+ALTER TABLE itaccessories DROP FOREIGN KEY customer_id;
+
+
+SHOW CREATE TABLE itaccessories;
+ALTER TABLE itaccessories DROP FOREIGN KEY itaccessories_ibfk_1;
+ALTER TABLE itaccessories DROP KEY customer_id; 
+
+SELECT * FROM itaccessories;
+DESC itaccessories;
+SHOW INDEX FROM itaccessories;
+
+itaccessories | CREATE TABLE `itaccessories` (
+  `id` int NOT NULL,
+  `item` varchar(30) NOT NULL,
+  `madeby` varchar(30) NOT NULL,
+  `unitprice` varchar(50) NOT NULL,
+  `totalqty` int DEFAULT NULL,
+  `customer_id` int NOT NULL,
+  KEY `customer_id` (`customer_id`), <- KEY ကိုပါဖျက်ပေးရမှာ
+  CONSTRAINT `itaccessories_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci 
+
+
+(FOREIGN KEY ကိုဖျက်မယ်ဆိုရင် SQL ကို auto generate လုပ်ပေးတဲ့ key (eg: itaccessories_ibfk_1) နဲ့ KEY (eg: customer_id`) နှစ်ခုကို ဖျက်ပေးမှရမ) 
+______________________________________
+
+=>Add UNIQUE KEY
+DESC item 

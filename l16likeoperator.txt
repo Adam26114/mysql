@@ -1,0 +1,122 @@
+=>LIKE Operator
+
+Wildcards
+
+WHERE coustomername LIKE 'a%' Find any valaues that start with "a"
+WHERE coustomername LIKE '%a' Find any valaues that end with "a"
+WHERE coustomername LIKE '%or%' Find any valaues that that have "or" in any position
+WHERE coustomername LIKE '_r' Find any valaues that that have "r" in second position
+WHERE coustomername LIKE 'a_%' start with a that are at least 2 characters in length
+WHERE coustomername LIKE 'a__%' start with a that are at least 2 characters in length
+
+
+
+
+____________________________________________________
+
+EXERCISES
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE 'maung maung';
+
+SELECT name,age,salary,city
+FROM employees
+WHERE salary LIKE '1%';
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE '1%';
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE '%ng';
+
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE '%zaw%';
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE 't%';
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE 'T%';
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE '%NG';
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE '%ZAW%';
+
+SELECT name,age,salary,city
+FROM employeess
+WHERE name LIKE '_a%';
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE 'a_%';
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE  'a__%0';
+
+m zaw naw 20 100000 chin
+k yar  21 200000 chin
+k 22 300000 chin
+mm 23 400000 chin
+m 24 500000 chin
+
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE  'm__%';
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE  'k_%';
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE  'k__%';
+
+
+
+SELECT name,age,salary,city
+FROM employees
+WHERE name LIKE  'a%g'; (aနဲ့စတယ် gနဲ့ဆုံးတယ်)
+
+
+__________________________________________________________
+
+MOTE :  _ is mean any one character 
+EXERCISE (LIKE '____')
+
+SELECT * FROM employees;
+
+xxxxxx
+SELECT * FROM employees WHERE salary LIKE '____';
+
+xxxxxx
+SELECT * FROM employees WHERE salary LIKE '_____';
+
+
+SELECT * FROM employees WHERE salary LIKE '_';
+
+EXERCISRS (LIKE '%') is anything
+
+
+SELECT * FROM employees WHERE salary LIKE '%'; 
+
+face_book
+SELECT * FROM employees WHERE name LIKE '%\_%';
+
+10%happy
+SELECT * FROM employees WHERE name LIKE '%\%%';
+
+
+30PS

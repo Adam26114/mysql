@@ -1,0 +1,55 @@
+SERVER LOGIn
+
+CMD
+
+username = ssh dlt@dltmyanmar.com
+password = datalandtechnology
+
+WinSCP = 137.184.248.101
+password = datalandtechnology
+
+Database login
+
+
+
+mysql -uWDF5308 -pdatalandtechnology
+
+SHOW DATABASES;
+
+USE wdf5308;
+
+SELECT database();
+
+SHOW TABLES;
+
+
+
+
+data base login
+
+(METHOD1)
+mysql -uWDF5308 -p
+datalandtechnology
+
+
+Method2
+mysql -u WDFXXX -p
+logout -exit
+
+=>VERSION CHEECK
+(Method 1 =in sever)
+mysql -V
+
+(Method 2=in mysql)
+help;(shortcut=\h)
+staus(shortcut=\s)
+
+_______________________________
+=>Arithmetic Operator(5types)
+Operators			Meaning										Operates On
++ (Add)				Additions									Numeric Value
+- (Subtract)		Subtraction									Numeric Value
+* (Multiply)		Multiplicaton								Numeric Value
+/ (Divide)			divisions									Numeric Value
+% (Modulus)			Returns remainder of a divisions			Numeric Value
+%(Modulus)   Returns remainder of a division      ''

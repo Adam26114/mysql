@@ -1,0 +1,82 @@
+=>Join
+
+1.  INNER JOIN (or sometimes call simple join)
+2.  LEFT OUTER JOIN(or we can call LEFT JOIN)
+3.  RIGHT OUTER JOIN(or we can call LEFT JOIN)
+4.  FULL OUTER JOIN(or we can call full JOIN)
+______________________________________________________
+
+CREATE TABLE IF NOT EXISTS customers(
+id INT AUTO_INCREMENT PRIMARY KEY,
+firstname VARCHAR(20),
+lastname VARCHAR(20),
+email VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS orders(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    orderdate DATE,
+    amount DECIMAL(10,2),
+    customer_id INT
+);
+
+INSERT INTO customers(firstname,lastname,email) 
+VALUES('aung','aung','aungaung@gmail.com'),
+('maung','maung','maungmaung@gmail.com'),
+('kyaw','kyaw','kyawkyaw@gmail.com'),
+('zaw','zaw','zawzaw@gmail.com'),
+('su','su','susu@gmail.com'),
+('aye','aye','ayeaye@gmail.com'),
+('yu','yu','yuyu@gmail.com');
+
+SELECT * FORM customers;
+
+INSERT INTO orders(orderdate,amount,customer_id)
+VALUES('2021/02/10',99.99,1),
+('2021/10/11',75.35,1),
+('2021/06/12',100.26,3),
+('2021/07/13',13.25,2),
+('2021/01/14',45,3);
+
+SELECT * FORM orders;
+
+INSERT INTO orders(orderdate,amount,customer_id)
+VALUE('2021/10/10',70.25,20);
+
+SELECT * FROM orders WHERE customer_id = ( 
+    SELECT ID FROM customers WHERE lastname = 'aung' 
+);
+
+SELECT ID FROM customers WHERE lastname = 'maung';
+
+SELECT * FROM orders WHERE customer_id = ( SELECT ID FROM customers WHERE lastname = 'maung' );
+
+*error = Subquery returns more than 1 row
+SELECT * FROM orders WHERE customer_id = ( SELECT id FROM customers WHERE lastname = 'aung' );
+
+SELECT * FROM orders WHERE customer_id = 8;
+
+SELECT * FROM order WHERE customer_id = (
+    SELECT id FROM costomers
+    WHERE email = 'htooaung@gmail.com'
+);
+
+
+
+______________________________________________________
+
+=>Cross Join
+        (table နှစ်ခုယှဉ်ပီးပြတာကိုcross join လို့ခေါ်တယ်)
+SELECT * FROM customers,orders;
+SELECT * FROM orders,customers;
+______________________________________________________
+*NOTE
+cu table  user table  item table      order table
+id        id          id              cu_id
+firstname firstname   name            user_id
+lastname  lastname    productcategory item_id
+emill     email       price           creat_at
+address   password    qty             update_at
+phone
+          emptable 
+          user_id
